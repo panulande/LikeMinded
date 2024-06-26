@@ -39,9 +39,9 @@ app.use(
     })
 )
 
-const userRouter = require('./routes/user');
+const authRouter = require('./routes/auth');
 
-app.use(userRouter);
+app.use(authRouter);
 
 
 mongoose.connect(MONGODB_URI)
