@@ -1,0 +1,120 @@
+<%- include('../includes/head.ejs') %>
+
+<style>
+    .hidden{
+        display: none;
+    }
+    .visible{
+        display: flex;
+    }
+</style>
+</head>
+
+<body>
+    <%- include('../includes/navbar.ejs') %>
+
+
+    <%- include('../includes/footer.ejs') %>
+
+
+    <!-- signup form -->
+    <div class="signup-form-container" id="signup-form-container" >
+
+        <div class="signup-form">
+            <span class="close-btn" id="signup-close-btn">&times;</span>
+            <h2>Sign Up</h2>
+            <form action="/signup" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Login Form Popup -->
+    <div class="login-form-container" id="login-form-container" >
+        <div class="login-form">
+            <span class="close-btn" id="login-close-btn">&times;</span>
+            <h2>Login</h2>
+            <form action="/login" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="login-username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="login-password" name="password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Burger menu
+            const burger = document.querySelector('.burger');
+            const nav = document.querySelector('.nav-links');
+
+            burger.addEventListener('click', function () {
+                nav.classList.toggle('active');
+                burger.classList.toggle('toggle');
+            });
+
+            // Signup form
+            const signupBtn = document.getElementById('signup-btn');
+            const signupFormContainer = document.getElementById('signup-form-container');
+            const signupCloseBtn = document.getElementById('signup-close-btn');
+
+            function openSignupForm() {
+                signupFormContainer.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSignupForm() {
+                signupFormContainer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+
+            signupBtn.addEventListener('click', openSignupForm);
+            signupCloseBtn.addEventListener('click', closeSignupForm);
+
+            window.addEventListener('click', function (event) {
+                if (event.target === signupFormContainer) {
+                    closeSignupForm();
+                }
+            });
+
+            // Login form
+            const loginBtn = document.getElementById('login-btn');
+            const loginFormContainer = document.getElementById('login-form-container');
+            const loginCloseBtn = document.getElementById('login-close-btn');
+
+            function openLoginForm() {
+                loginFormContainer.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLoginForm() {
+                loginFormContainer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+
+            loginBtn.addEventListener('click', openLoginForm);
+            loginCloseBtn.addEventListener('click', closeLoginForm);
+
+            window.addEventListener('click', function (event) {
+                if (event.target === loginFormContainer) {
+                    closeLoginForm();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
