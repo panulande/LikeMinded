@@ -71,3 +71,7 @@ exports.postSignup = (req, res, next) =>{
 
 }
 
+exports.getAuthToken = (req, res, next)=>{
+    const token = req.params.token;
+    res.render('/');
+}
