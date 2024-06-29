@@ -21,6 +21,9 @@ exports.postSignup = (req, res, next) =>{
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
+    if(confirmPassword !== password){
+        throw new Error('passwords aint matchng')
+    }
 
     crypto.randomBytes(32, (err, buffer)=>{
         if(err){
@@ -57,13 +60,7 @@ exports.postSignup = (req, res, next) =>{
                           <p>http://localhost:5000/auth/${token}</p>
                             `)
                 .setText("Greetings from the team, you got this message because you requested a signup to LikeMinded website.");
-            
-      
-      
-      
-      
             return mailerSend.email.send(emailParams);
-          
         })
         
     
@@ -73,5 +70,32 @@ exports.postSignup = (req, res, next) =>{
 
 exports.getAuthToken = (req, res, next)=>{
     const token = req.params.token;
-    res.render('/');
+    unverifiedUser.findOne({emailVerificationToken: token})
+    .then(unverifiedUsers =>{
+        console.log(unverifiedUsers);
+        const user = new User({
+            username: unverifiedUsers.username,
+            userName: unverifiedUsers.userName,
+            email: unverifiedUsers.email,
+            password: unverifiedUsers.password,
+            profileUrl: unverifiedUsers.profileUrl,
+            dateCreated: unverifiedUsers.dateCreated,
+        })
+        return user.save();
+    })
+    .then(result=>{
+        console.log(token);
+        unverifiedUser.findOneAndDelete({emailVerificationToken: token})
+        .then(result =>{
+            res.redirect('/home');
+        })
+    })
+    .catch(err =>{
+        console.log(err);
+    })
+    
 }
+
+
+
+
