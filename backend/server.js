@@ -39,6 +39,11 @@ app.use(
     })
 )
 
+app.use((req, res, next) => {
+    res.locals.isAuthenticated = req.session.isLoggedIn;
+    next();
+});
+
 const authRouter = require('./routes/auth');
 const homeRouter = require('./routes/home');
 
