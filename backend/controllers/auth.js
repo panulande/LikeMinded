@@ -7,6 +7,7 @@ const MailerSend = require('mailersend').MailerSend
 const Sender = require('mailersend').Sender
 const mailerSendConfig = {apiKey: 'mlsn.c59908742ca4fc2711df6f7a713e8dc26da5d8b02c5a7bb7e509aaa526242e21'}
 const mailerSend = new MailerSend(mailerSendConfig)
+const bcrypt = require('bcryptjs');
 
 
 exports.getSignupLogin = (req, res, next)=>{
@@ -31,19 +32,24 @@ exports.postSignup = (req, res, next) =>{
             return res.redirect("/");
         }
         const token = buffer.toString('hex');
-        const user = new unverifiedUser({
-            username: username,
-            email: email,
-            password: password,
-            dateCreated: Date.now(),
-            verifiedEmail: false,
-            emailVerificationToken: token,
-            emailVerificationTokenExpiration: Date.now() + 3600000,
+        bcrypt.hash(password, 12)
+        .then(hashedPassword =>{
+            const user = new unverifiedUser({
+                username: username,
+                email: email,
+                password: hashedPassword,
+                dateCreated: Date.now(),
+                verifiedEmail: false,
+                emailVerificationToken: token,
+                emailVerificationTokenExpiration: Date.now() + 3600000,
+            })
+            return user.save().then(result=>{
+                console.log("user saved succesfully");
+                res.redirect('/')
+            })
+
         })
-        return user.save().then(result=>{
-            console.log("user saved succesfully");
-            res.redirect('/')
-        }).then(result => {
+        .then(result => {
       
             const sentFrom = new Sender('MS_Nx2TRU@trial-neqvygmev7z40p7w.mlsender.net', 'Pranav Lande');
       
@@ -66,6 +72,29 @@ exports.postSignup = (req, res, next) =>{
     
     })
 
+}
+
+exports.postLogin = (req, res, next) =>{
+    const username = req.body.username;
+    const password = req.body.password;
+    User.findOne({username:username}).then(user =>{
+        if(!user){
+            return res.redirect('/');
+        }
+        bcrypt.compare(password, user.password)
+        .then(doMatch=>{
+            if(doMatch){
+                req.session.isLoggedIn = true;
+                req.session.user = user;
+            }
+            return req.session.save(err =>{
+                console.log(err);
+                res.redirect('/home');
+            });
+        });
+    }).catch(err =>{
+        console.log(err);
+    })
 }
 
 
