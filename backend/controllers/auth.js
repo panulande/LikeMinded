@@ -8,6 +8,7 @@ const Sender = require('mailersend').Sender
 const mailerSendConfig = {apiKey: 'mlsn.c59908742ca4fc2711df6f7a713e8dc26da5d8b02c5a7bb7e509aaa526242e21'}
 const mailerSend = new MailerSend(mailerSendConfig)
 const bcrypt = require('bcryptjs');
+const {validationResult} = require('express-validator');
 
 
 exports.getSignupLogin = (req, res, next)=>{
@@ -22,6 +23,7 @@ exports.postSignup = (req, res, next) =>{
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
+    const errors = validationResult(req);
     if(confirmPassword !== password){
         throw new Error('passwords aint matchng')
     }
@@ -77,6 +79,8 @@ exports.postSignup = (req, res, next) =>{
 exports.postLogin = (req, res, next) =>{
     const username = req.body.username;
     const password = req.body.password;
+    const errors = validationResult(req);
+    console.log(errors);
     User.findOne({username:username}).then(user =>{
         if(!user){
             return res.redirect('/');

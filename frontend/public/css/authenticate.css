@@ -10,7 +10,7 @@ body {
 }
 
 header {
-    background-color: #4C0027;
+    background-color: #F5F5F5;
     color: #fff;
     padding: 15px 20px;
     height: 80px;
@@ -34,7 +34,7 @@ nav {
 }
 
 .nav-links li a {
-    color: #fff;
+    color: black;
     text-decoration: none;
     font-size: 18px;
     padding: 5px 10px;
@@ -245,6 +245,13 @@ footer {
     color: #888;
 }
 
+.error {
+    color: red;
+    text-align: center;
+    background-color: #ee8888;
+    width: 80%;
+    margin: auto auto;
+}
 
 
 @media screen and (max-width: 768px) {

@@ -5,9 +5,8 @@ const path = require('path');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoDBStore = require('connect-mongodb-session')(session);
-// const flash = require('connect-flash');
-// const csrf = require('csurf');
-
+const flash = require('connect-flash');
+const csrf = require('csurf');
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -20,6 +19,7 @@ const store = new MongoDBStore({
     collection: 'sessions'
 });
 
+
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './backend/views');
@@ -29,7 +29,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
 app.use('/uploads/profiles', express.static(path.join(__dirname, 'uploads', 'profiles')));
 
-
 app.use(
     session({
         secret: 'my secret',
@@ -38,9 +37,16 @@ app.use(
         store: store,
     })
 )
+const csrfProtection = csrf();
+app.use(csrfProtection);
+app.use(flash());
+
+
+
 
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
+    res.locals.csrfToken = req.csrfToken();
     next();
 });
 

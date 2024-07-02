@@ -19,11 +19,11 @@
 
     <!-- signup form -->
     <div class="signup-form-container" id="signup-form-container" >
-
         <div class="signup-form">
+            <div class="error">An error has occured</div>
             <span class="close-btn" id="signup-close-btn">&times;</span>
             <h2>Sign Up</h2>
-            <form action="/signup" method="POST">
+            <form action="/signup" method="POST" novalidate>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
                 <label for="email">Email:</label>
@@ -32,6 +32,7 @@
                 <input type="password" id="password" name="password" required>
                 <label for="confirmPassword">Confirm Password:</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit">Sign Up</button>
             </form>
         </div>
@@ -41,13 +42,15 @@
     <!-- Login Form Popup -->
     <div class="login-form-container" id="login-form-container" >
         <div class="login-form">
+            <div class="error">An error has occured</div>
             <span class="close-btn" id="login-close-btn">&times;</span>
             <h2>Login</h2>
-            <form action="/login" method="POST">
+            <form action="/login" method="POST" novalidate>
                 <label for="username">Username:</label>
                 <input type="text" id="login-username" name="username" required>
                 <label for="password">Password:</label>
                 <input type="password" id="login-password" name="password" required>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit">Login</button>
             </form>
         </div>
